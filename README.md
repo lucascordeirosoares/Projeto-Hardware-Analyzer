@@ -190,6 +190,6 @@ O projeto demonstra como dados de produtos de hardware podem ser organizados, pr
 - Lucas Cordeiro Soares — 62088736
 - Maria Heloísa Saturnina do Santos Silva — 62596556
 - Kaylla Kristiny Nascimento de Macedo — 52173866
-- Saulo Rodrigues Costa Filho — [Preencher matrícula]
+- Saulo Rodrigues Costa Filho — 62256796
 
  

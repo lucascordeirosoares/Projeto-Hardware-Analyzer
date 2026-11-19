@@ -1,7 +1,8 @@
 
 from pathlib import Path
 import pandas as pd
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 class AnalisadorHardware:
     """Classe responsável por carregar e preparar os dados de hardware."""
@@ -120,3 +121,122 @@ class AnalisadorHardware:
             by="Price",
             ascending=False
         )
+    
+    def grafico_precos_por_categoria(self):
+        """Exibe um gráfico de barras com os preços médios por categoria."""
+
+        comparacao = self.comparar_precos_categorias()
+
+        if comparacao.empty:
+            print("Não existem dados disponíveis para gerar o gráfico.")
+            return
+
+        plt.figure(figsize=(10, 6))
+
+        sns.barplot(
+            data=comparacao,
+            x="categoria",
+            y="preco_medio"
+        )
+
+        plt.title("Preço médio por categoria de hardware")
+        plt.xlabel("Categoria")
+        plt.ylabel("Preço médio (USD)")
+
+        plt.tight_layout()
+        plt.show()
+
+    def grafico_distribuicao_precos(self, categoria):
+        """Exibe um histograma com a distribuição dos preços."""
+
+        if categoria not in self.bases:
+            raise ValueError("Categoria não encontrada.")
+
+        df = self.bases[categoria]
+
+        if "Price" not in df.columns:
+            raise ValueError("Essa categoria não possui preços.")
+
+        precos = df["Price"].dropna()
+
+        if precos.empty:
+            print("Não existem preços disponíveis para essa categoria.")
+            return
+
+        plt.figure(figsize=(10, 6))
+
+        sns.histplot(
+            data=precos,
+            bins=20,
+            kde=True
+        )
+
+        plt.title(f"Distribuição dos preços - {categoria}")
+        plt.xlabel("Preço (USD)")
+        plt.ylabel("Quantidade de produtos")
+
+        plt.tight_layout()
+        plt.show()
+
+    def grafico_nucleos_preco_cpu(self):
+        """Exibe a relação entre núcleos e preços dos processadores."""
+
+        df = self.bases["CPU"]
+
+        dados = df[["Cores", "Price"]].copy()
+
+        dados["Cores"] = pd.to_numeric(
+            dados["Cores"], errors="coerce"
+        )
+
+        dados["Price"] = pd.to_numeric(
+            dados["Price"], errors="coerce"
+        )
+
+        dados = dados.dropna()
+
+        if dados.empty:
+            print("Não existem dados suficientes para gerar o gráfico.")
+            return
+
+        plt.figure(figsize=(10, 6))
+
+        sns.scatterplot(
+            data=dados,
+            x="Cores",
+            y="Price"
+        )
+
+        plt.title("Relação entre núcleos e preço dos processadores")
+        plt.xlabel("Quantidade de núcleos")
+        plt.ylabel("Preço (USD)")
+
+        plt.tight_layout()
+        plt.show()
+
+    
+    def grafico_linha_precos_categorias(self):
+        """Exibe um gráfico de linha com os preços médios por categoria."""
+
+        comparacao = self.comparar_precos_categorias()
+
+        if comparacao.empty:
+            print("Não existem dados disponíveis para gerar o gráfico.")
+            return
+
+        plt.figure(figsize=(10, 6))
+
+        plt.plot(
+            comparacao["categoria"],
+            comparacao["preco_medio"],
+            marker="o"
+        )
+
+        plt.title("Preço médio por categoria de hardware")
+        plt.xlabel("Categoria")
+        plt.ylabel("Preço médio (USD)")
+
+        plt.xticks(rotation=45)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
